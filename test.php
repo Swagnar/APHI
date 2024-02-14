@@ -13,14 +13,14 @@ const kon = new Kon('root', '', 'api');
 test_clog("KON CREATED", __LINE__);
 test_clog("Creating UserModel", __LINE__);
 
-$userModel = new UserModel(kon);
+const userModel = new UserModel(kon);
 test_clog("UserModel created!", __LINE__);
 test_clog("Running `echo UserModel`: \n", __LINE__);
 
-echo $userModel;
+echo userModel;
 test_clog("All fields visible?", __LINE__);
 
 test_clog("Invoking `get_fields` method from KonModel", __LINE__);
-echo var_dump($userModel->get_fields());
+echo var_dump(userModel->get_fields());
 
 ?>
