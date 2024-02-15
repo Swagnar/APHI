@@ -1,7 +1,7 @@
 # APHI 💀
 <i>a.k.a. my desperate attempt to make something cool and useful</i>
 <br>
-I love Django and Django REST Framework (❤️). PHP is cool and all, and PDO has great OOP capabilities but I wanted something a lot closer to Django way of creating [ORM](https://docs.djangoproject.com/en/5.0/topics/db/models/).
+I love [Django](https://www.djangoproject.com/) and [Django REST Framework](https://www.django-rest-framework.org/) (❤️). PHP is cool and all, and PDO has great OOP capabilities but I wanted something a lot closer to Django way of creating [ORM](https://docs.djangoproject.com/en/5.0/topics/db/models/).
 <br>
 So in my spare time I try to make something out of it. Want to contribute? Fork it and suffer with me 🔥
 
