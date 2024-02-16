@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../core/KonModel.php';
+
 class UserModel extends KonModel {
   use ConsoleOutput;
 
@@ -8,9 +10,8 @@ class UserModel extends KonModel {
   private PasswordField $_haslo;
   private StringField $_email;
 
-
-  public function __construct(private Kon $kon) {
-    parent::__construct('users', $kon);
+  public function __construct(public string $tableName) {
+    parent::__construct($tableName);
     $this->_id    = $this->pk_field();
     $this->_login = $this->string_field("login", 100, false);
     $this->_haslo = $this->password_field("hasło", "default");
@@ -18,4 +19,6 @@ class UserModel extends KonModel {
   }
   
 }
+
+
 ?>

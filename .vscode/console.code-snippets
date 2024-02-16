@@ -1,0 +1,37 @@
+{
+	"Print console success": {
+		"scope": "php",
+		"prefix": "csuc",
+		"body": [
+			"\\$this->clog_success($1);"
+		]
+	},
+	"Print console info": {
+		"scope": "php",
+		"prefix": "cinf",
+		"body": [
+			"\\$this->clog_info($1);"
+		]
+	},
+	"Print console error": {
+		"scope": "php",
+		"prefix": "cerr",
+		"body": [
+			"\\$this->clog_error($1);"
+		]
+	},
+	"Print console warning": {
+		"scope": "php",
+		"prefix": "cwar",
+		"body": [
+			"\\$this->clog_warning($1);"
+		]
+	},
+	"Print console log": {
+		"scope": "php",
+		"prefix": "clog",
+		"body": [
+			"\\$this->clog($1);"
+		]
+	}
+}

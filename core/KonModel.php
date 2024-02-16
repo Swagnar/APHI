@@ -1,30 +1,38 @@
 <?php
 
-// require 'Kon.php';
+require_once __DIR__ . "/../traits/ConsoleOutput.trait.php";
+require_once __DIR__ . '/../traits/DB.trait.php';
+require_once __DIR__ . '/../traits/Config.trait.php';
 
-// require __DIR__ . "/../class/PrimaryKeyField.class.php";
-// require __DIR__ . "/../class/StringField.class.php";
-// require __DIR__ . "/../class/PasswordField.class.php";
+
+require_once __DIR__ . '/../class/Field.class.php';
+require_once __DIR__ . '/../class/PasswordField.class.php';
+require_once __DIR__ . '/../class/PrimaryKeyField.class.php';
+require_once __DIR__ . '/../class/StringField.class.php';
+
+define('MANAGER_PATH', __DIR__ . '/../class/Manager.class.php');
 
 class KonModel {
   use ConsoleOutput;
   use DB;
 
-  protected string $_name;
-  protected Kon $_kon;
-  protected mysqli $_mysqli;
   protected array $_fields;
+  public mysqli $kon;
 
-  function __construct(string $name,Kon $kon)
+  function __construct(public string $tableName)
   {
-    $this->clog_info("Creating KonModel with name `$name`");
-    $this->_name = $name;
-    $this->_kon = $kon;
-    $this->_mysqli = $this->_kon->getCon();
-    if($this->check_if_exists()) {
-      $this->clog_info("Table with name `$name` already exists");
-    }
+    $manager = require(MANAGER_PATH);
     
+    $this->clog_info("Creating KonModel with name `$tableName`");
+    $this->kon = $manager->kon;
+
+    if($this->check_if_exists()) {
+      $this->clog_info("Table with name `$tableName` already exists");
+
+    }
+
+
+
   }
 
   public function __toString()
@@ -39,24 +47,24 @@ class KonModel {
    * @return boolean Returns **true** if table with given model name already exists in the database
    */
   private function check_if_exists() {
-    return $this->send_query($this->_mysqli, "DESCRIBE table", $this->_name);
+    return $this->send_query($this->kon, "DESCRIBE table", $this->tableName);
   }
 
   
 
-  protected function getAll() {
+  public function getAll() {
     try {
       $this->clog_info("
       Running query: SELECT * FROM table
-      For table    : $this->_name
+      For table    : $this->tableName
       ");
 
-      if($r = $this->send_query($this->_mysqli, "SELECT * FROM table",  $this->_name)) {
+      if($r = $this->send_query($this->kon, "SELECT * FROM table",  $this->tableName)) {
         $data = [];
         while($row = mysqli_fetch_assoc($r)) {
           $data[] = $row;
         }
-        $this->clog_success("Data acquired");
+        $this->clog_success("Data acquired \n");
         return $data;
       }
     } catch(mysqli_sql_exception $e) {
@@ -95,6 +103,4 @@ class KonModel {
   }
 
 }
-
-
 ?>
