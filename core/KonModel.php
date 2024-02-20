@@ -12,6 +12,10 @@ require_once __DIR__ . '/../class/StringField.class.php';
 
 define('MANAGER_PATH', __DIR__ . '/../class/Manager.class.php');
 
+
+
+
+
 class KonModel {
   use ConsoleOutput;
   use DB;
@@ -28,11 +32,7 @@ class KonModel {
 
     if($this->check_if_exists()) {
       $this->clog_info("Table with name `$tableName` already exists");
-
     }
-
-
-
   }
 
   public function __toString()

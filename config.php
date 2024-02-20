@@ -10,7 +10,7 @@
   ),
   'APP' => 
   array (
-    'APP_NAME' => '',
+    'APP_NAME' => 'myApp',
   ),
 );
 ?>

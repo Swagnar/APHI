@@ -5,7 +5,6 @@ require_once 'traits/DB.trait.php';
 require_once 'traits/ConsoleOutput.trait.php';
 require_once 'traits/Config.trait.php';
 
-
 $operation = $argv[1];
 $variant   = $argv[2];
 $name      = $argv[3];

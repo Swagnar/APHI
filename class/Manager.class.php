@@ -9,11 +9,11 @@ class Manager {
   public string $appName;
 
   // Constructor
-
-  public function __construct($cfg, $kon) {
+  //
+  public function __construct(array $cfg, mysqli $kon) {
+    
     if(!is_array($cfg)) {
       $cfgType = gettype($cfg);
-      
       $this->clog_error("Config file does not export valid type of data. Got '$cfgType', expected 'array'");
       throw new ErrorException;
     }
@@ -22,7 +22,7 @@ class Manager {
     $this->kon = $kon;
     $this->appName = $this->config['APP']['APP_NAME'];
     
-    set_error_handler($this->exception_error_handler(...));
+    set_error_handler([$this, 'exception_error_handler']);
   }
 
   public function __toString()
@@ -30,7 +30,7 @@ class Manager {
     return "Manager for app $this->appName";
   }
 
-  private function exception_error_handler(int $errno, string $errstr, string $errfile = null, int $errline) {
+  public function exception_error_handler(int $errno, string $errstr, string $errfile = null, int $errline) {
     if (!(error_reporting() & $errno)) {
         // This error code is not included in error_reporting
         return;
@@ -38,8 +38,8 @@ class Manager {
     throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
   }
 
-  // File system methods
-
+  // Config methods
+  //
   public function save_to_config(string $category, string $key, string $val) :bool {
     $this->config["$category"]["$key"] = $val;
 
@@ -50,6 +50,8 @@ class Manager {
     return (bool)file_put_contents('config.php', $configStr);
   }
 
+  // File system methods
+  //
   private static function create_file($path, $content) :bool {
     if(!file_exists($path)) {
       file_put_contents($path, $content);
@@ -68,13 +70,11 @@ class Manager {
     return file_get_contents($path);
   }
 
-  // Shell parameters handlers
 
+  // Shell commands
+  //
   public function create_model($name) {
     $this->clog_info("Generating '$name' model...");
-
-    
-
     $className = ucfirst($name) . 'Model';
     $fileName = $className . ".php";
     $contentString = "
@@ -124,21 +124,38 @@ class $className extends KonModel {
 
 $config = require(CONFIG_PATH);
 
-try {
-  if(Manager::check_config($config)) {
-    
-    $kon = DB::establish_connection(
-      $config['DB']['DB_HOST'], 
-      $config['DB']['DB_USER'], 
-      $config['DB']['DB_PASS'], 
-      $config['DB']['DB_NAME']
-    );
-    
-    $manager = new Manager($config, $kon);
-    return $manager;
+function create_manager($cfg): Manager | bool {
+  try {
+      if (Config::check_config($cfg)) {
+          $kon = DB::establish_connection(
+              $cfg['DB']['DB_HOST'],
+              $cfg['DB']['DB_USER'],
+              $cfg['DB']['DB_PASS'],
+              $cfg['DB']['DB_NAME']
+          );
+
+          if (!$kon) {
+              ConsoleOutput::clog_error('Failed to establish connection with database, aborting');
+              throw new RuntimeException("Failed to establish database connection");
+          }
+
+          return new Manager($cfg, $kon);
+      } else {
+          ConsoleOutput::clog_error('Invalid configuration');
+          throw new RuntimeException("Invalid configuration");
+      }
+  } catch (Exception $e) {
+      ConsoleOutput::clog_error('Error creating Manager: ' . $e->getMessage());
+      return false;
   }
-} catch(mysqli_sql_exception $e) {
-  Manager::clog_error("Failed to establish connection \n" . $e);
+}
+
+$manager = create_manager($config);
+
+ConsoleOutput::clog_success("APP NAME: " . $manager->appName);
+
+if(!$manager) {
+  exit;
 }
 
 ?>

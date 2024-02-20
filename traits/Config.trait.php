@@ -31,22 +31,20 @@ public static function check_config(array $cfg): bool {
           
         // Check if the key exists
         if (!isset($cfg[$section][$key])) {
-          ConsoleOutput::clog_error("config['$section']['$key'] is missing");
-          throw new ErrorException;
+          throw new InvalidArgumentException("config['$section']['$key'] is missing ");
         }
 
         // Check if the value is empty
         $value = $cfg[$section][$key];
         if ($key !== 'DB_PASS' && empty($value)) {
-          ConsoleOutput::clog_error("config['$section']['$key'] is empty");
-          throw new ErrorException;
+          throw new InvalidArgumentException("config['$section']['$key'] is empty ");
         }
       }
     }
 
-    ConsoleOutput::clog_info("All config checks passed");
+    ConsoleOutput::clog_success("All config checks passed ");
     return true;
-  } catch (ErrorException $e) {
+  } catch (InvalidArgumentException $e) {
     ConsoleOutput::clog_error("Before continuing, please set the required values in `config.php` file \n" . $e);
     return false;
   }

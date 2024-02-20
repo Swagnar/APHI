@@ -14,5 +14,6 @@ trait ConsoleOutput {
   public static function clog_error(string $msg) {print "\n\033[31m[ERROR]\033[0m $msg";}
   public static function clog_warning(string $msg) {print "\n\033[33m[WARNING]\033[0m $msg";}
   public static function clog(string $msg) {print "\n$msg"; }
+  public static function clog_test(string $msg, $line) { print "\n\033[33m[TEST LINE $line]\033[0m $msg";}
 }
 ?>
